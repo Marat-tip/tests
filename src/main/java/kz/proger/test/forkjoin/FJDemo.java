@@ -30,7 +30,12 @@ class SumOfNumbers extends RecursiveTask<Long> {
         this.from = from;
         this.to = to;
         this.threshHold = (to - from) / (7 * 10);
-//        this.threshHold = 1L;
+    }
+
+    public SumOfNumbers(Long from, Long to, Long threshHold) {
+        this.from = from;
+        this.to = to;
+        this.threshHold = threshHold;
     }
 
     @Override
@@ -46,8 +51,8 @@ class SumOfNumbers extends RecursiveTask<Long> {
         } else {
             logger.info("task is too big");
             long mid = (from + to) / 2L;
-            SumOfNumbers task1 = new SumOfNumbers(from, mid);
-            SumOfNumbers task2 = new SumOfNumbers(mid + 1, to);
+            SumOfNumbers task1 = new SumOfNumbers(from, mid, threshHold);
+            SumOfNumbers task2 = new SumOfNumbers(mid + 1, to, threshHold);
             invokeAll(task1, task2);
 
             Long res2 = task2.join();
