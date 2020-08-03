@@ -11,11 +11,36 @@ public class FJDemo {
     private static final Logger logger = LoggerFactory.getLogger(FJDemo.class);
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
-        ForkJoinPool pool = ForkJoinPool.commonPool();
         long from = 1L;
-        long to = 1_000_000L;
+        long to = 1_000_000_000L;
+        seqCalc(from, to);
+        fjCalc(from, to);
+    }
+
+
+    public static void fjCalc(Long from, Long to) throws ExecutionException, InterruptedException {
+        long startTime = System.currentTimeMillis();
+
+        ForkJoinPool pool = ForkJoinPool.commonPool();
         Long result = pool.submit(new SumOfNumbers(from, to)).get();
-        logger.info("sum of {} to {} is {}", from, to, result);
+        long time = System.currentTimeMillis() - startTime;
+        logger.info("time of FJ: {}", time);
+
+        logger.info("FJ: sum of {} to {} is {}", from, to, result);
+    }
+
+    public static void seqCalc(Long from, Long to) {
+        long startTime = System.currentTimeMillis();
+
+        long result = 0L;
+        for (long i = from; i <= to; i++) {
+            result += i;
+        }
+
+        long time = System.currentTimeMillis() - startTime;
+        logger.info("time of SEQ: {}", time);
+
+        logger.info("SEQ: sum of {} to {} is {}", from, to, result);
     }
 }
 
