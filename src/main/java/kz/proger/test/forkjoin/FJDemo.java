@@ -54,7 +54,7 @@ class SumOfNumbers extends RecursiveTask<Long> {
     public SumOfNumbers(Long from, Long to) {
         this.from = from;
         this.to = to;
-        this.threshHold = (to - from) / (7 * 10);
+        this.threshHold = (to - from) / ForkJoinPool.getCommonPoolParallelism();
     }
 
     public SumOfNumbers(Long from, Long to, Long threshHold) {
@@ -69,12 +69,12 @@ class SumOfNumbers extends RecursiveTask<Long> {
         long result = 0L;
 
         if (size <= threshHold) {
-            logger.info("task is small enough computing result");
+            logger.info("task with size: {} is small enough computing result", size);
             for (long i = from; i <= to; i++) {
                 result += i;
             }
         } else {
-            logger.info("task is too big");
+            logger.info("split task with size: {}", size);
             long mid = (from + to) / 2L;
             SumOfNumbers task1 = new SumOfNumbers(from, mid, threshHold);
             SumOfNumbers task2 = new SumOfNumbers(mid + 1, to, threshHold);
